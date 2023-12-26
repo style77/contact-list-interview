@@ -12,6 +12,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - default
   
   redis:
     image: redis:latest
@@ -20,21 +22,42 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - default
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    command: 
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
     depends_on:
       - database
+    networks:
+      - default
+    env_file:
+      - .env
+    volumes:
+      - .:/code
 
-  celery:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: celery -A contact_list_interview.celery worker --loglevel=info
-    depends_on:
-      - database
-      - redis
-      - app
+  # celery:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   command: python -m celery -A contact_list_interview worker --loglevel=info
+  #   depends_on:
+  #     - database
+  #     - redis
+  #     - app
+  #   networks:
+  #     - default
+  #   env_file:
+    #   - .env
+    # volumes:
+    #   - .:/code
+
+networks:
+  default:
+    name: contactlist
+    driver: bridge
