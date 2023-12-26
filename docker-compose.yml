@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: contactlist
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  redis:
+    image: redis:latest
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: 
+    depends_on:
+      - database
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A contact_list_interview.celery worker --loglevel=info
+    depends_on:
+      - database
+      - redis
+      - app
