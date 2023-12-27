@@ -22,13 +22,11 @@ def insert_contacts(df, contact_list):
 # Code of this parse_x functions could be just in case statement
 # However we could update these in future
 def parse_xlsx_contactlist(path):
-    df = pd.read_excel(path, engine="openpyxl")
-    return df
+    return pd.read_excel(path, engine="openpyxl")
 
 
 def parse_csv_contactlist(path):
-    df = pd.read_csv(path)
-    return df
+    return pd.read_csv(path)
 
 
 @shared_task()
