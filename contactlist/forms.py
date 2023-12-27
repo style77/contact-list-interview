@@ -20,3 +20,5 @@ class UploadContactForm(forms.Form):
         contact_list.save()
 
         handle_contact_list_task.delay(contact_list.id)
+
+        return contact_list
