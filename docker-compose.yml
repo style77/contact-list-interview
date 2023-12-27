@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python -m celery -A contact_list_interview.celery worker --loglevel=info
+    command: python -m celery -A contact_list_interview.celery worker --loglevel=debug
     depends_on:
       - database
       - redis
