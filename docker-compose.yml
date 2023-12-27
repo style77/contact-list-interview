@@ -39,23 +39,23 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/code
+      - .:/app
 
-  # celery:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: python -m celery -A contact_list_interview worker --loglevel=info
-  #   depends_on:
-  #     - database
-  #     - redis
-  #     - app
-  #   networks:
-  #     - default
-  #   env_file:
-    #   - .env
-    # volumes:
-    #   - .:/code
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m celery -A contact_list_interview.celery worker --loglevel=info
+    depends_on:
+      - database
+      - redis
+      - app
+    networks:
+      - default
+    env_file:
+      - .env
+    volumes:
+      - .:/app
 
 networks:
   default:
